@@ -4,8 +4,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'ConnectSphere',
-  description: 'A modern social application for connecting people.',
+  title: 'Jannu Live',
+  description: 'Live streaming and social connection.',
 };
 
 export default function RootLayout({

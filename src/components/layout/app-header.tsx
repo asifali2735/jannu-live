@@ -16,7 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { currentUser } from '@/lib/placeholder-data';
 import Link from 'next/link';
 
-const ConnectSphereLogo = () => (
+const JannuLiveLogo = () => (
     <div className="flex items-center gap-2">
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +31,7 @@ const ConnectSphereLogo = () => (
             <path d="M10.02 6.02c.8-.8 2.05-.8 2.85 0l4.03 4.03c.8.8.8 2.05 0 2.85l-4.03 4.03c-.8.8-2.05.8-2.85 0l-4.03-4.03c-.8-.8-.8-2.05 0-2.85l4.03-4.03z" />
             <path d="M12 12h.01" />
         </svg>
-        <h1 className="text-xl font-headline font-bold">ConnectSphere</h1>
+        <h1 className="text-xl font-headline font-bold">Jannu Live</h1>
     </div>
 );
 
@@ -43,7 +43,7 @@ export function AppHeader() {
         <SidebarTrigger />
       </div>
       <div className="hidden md:block font-headline text-lg font-semibold">
-        ConnectSphere
+        Jannu Live
       </div>
       <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
         <form className="ml-auto flex-1 sm:flex-initial">

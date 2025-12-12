@@ -34,10 +34,10 @@ import { currentUser } from '@/lib/placeholder-data';
 import { useTheme } from 'next-themes';
 import React from 'react';
 
-const ConnectSphereLogo = () => (
+const JannuLiveLogo = () => (
   <div className="flex items-center gap-2 p-2">
     <Bot className="text-primary w-8 h-8" />
-    <h1 className="text-xl font-headline font-bold text-foreground">ConnectSphere</h1>
+    <h1 className="text-xl font-headline font-bold text-foreground">Jannu Live</h1>
   </div>
 );
 
@@ -57,7 +57,7 @@ export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader>
-        <ConnectSphereLogo />
+        <JannuLiveLogo />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

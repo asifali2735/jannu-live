@@ -18,7 +18,7 @@ export default function LoginPage() {
         <CardHeader className="text-center">
             <div className="flex justify-center items-center gap-2 mb-4">
                 <Bot className="h-8 w-8 text-primary" />
-                <CardTitle className="text-3xl font-headline">ConnectSphere</CardTitle>
+                <CardTitle className="text-3xl font-headline">Jannu Live</CardTitle>
             </div>
           <CardDescription>
             Enter your email below to login to your account
