@@ -22,7 +22,7 @@ const ParticipantVideo = ({ user, isMuted, hasVideo }: { user: typeof users[0], 
       </div>
     )}
     <div className="absolute bottom-2 left-2 bg-black/50 text-white text-sm px-2 py-1 rounded-md flex items-center gap-2">
-      {isMuted && <MicOff className="h-4 w-4 text-red-400" />}
+      {isMuted && <MicOff className="h-4 w-4 text-red-500" />}
       <span>{user.name}</span>
     </div>
   </div>
