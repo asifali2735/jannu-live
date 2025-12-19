@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jannu Live - Neon Streaming App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="jannu-live-app">
+        <!-- Authentication Screen -->
+        <div class="app-screen active" id="auth-screen">
+            <div class="app-header">
+                <h1 class="app-title">JANNU LIVE</h1>
+            </div>
+            
+            <div class="auth-container">
+                <div class="auth-header">
+                    <p class="app-subtitle">Join the neon streaming community</p>
+                </div>
+
+                <div class="auth-tabs">
+                    <div class="auth-tab active" data-tab="signin">Sign In</div>
+                    <div class="auth-tab" data-tab="signup">Sign Up</div>
+                </div>
+
+                <!-- Sign In Form -->
+                <form class="auth-form active" id="signin-form">
+                    <div class="form-group">
+                        <label class="form-label" for="signin-email">Email or Username</label>
+                        <input type="text" id="signin-email" class="form-input" placeholder="Enter your email or username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="signin-password">Password</label>
+                        <input type="password" id="signin-password" class="form-input" placeholder="Enter your password" required>
+                        <span class="password-toggle" id="signin-toggle">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+
+                    <button type="submit" class="auth-button">Sign In</button>
+
+                    <div class="auth-footer">
+                        Don't have an account? <a href="#" class="auth-link" data-tab="signup">Sign Up</a>
+                    </div>
+                </form>
+
+                <!-- Sign Up Form -->
+                <form class="auth-form" id="signup-form">
+                    <div class="form-group">
+                        <label class="form-label" for="signup-username">Username</label>
+                        <input type="text" id="signup-username" class="form-input" placeholder="Choose a username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="signup-email">Email</label>
+                        <input type="email" id="signup-email" class="form-input" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="signup-password">Password</label>
+                        <input type="password" id="signup-password" class="form-input" placeholder="Create a password" required>
+                        <span class="password-toggle" id="signup-toggle">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+
+                    <button type="submit" class="auth-button">Create Account</button>
+
+                    <div class="auth-footer">
+                        Already have an account? <a href="#" class="auth-link" data-tab="signin">Sign In</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Home Screen -->
+        <div class="app-screen" id="home-screen">
+            <div class="app-header">
+                <h1 class="app-title">JANNU LIVE</h1>
+                <div class="header-icons">
+                    <div class="icon-btn"><i class="fas fa-search"></i></div>
+                    <div class="icon-btn"><i class="fas fa-bell"></i></div>
+                </div>
+            </div>
+
+            <div class="home-content">
+                <!-- Live Now Section -->
+                <div class="live-now-section">
+                    <div class="section-title">LIVE NOW</div>
+                    <div class="live-now-container">
+                        <div class="live-card" data-stream="glowmaster">
+                            <div class="live-thumbnail">
+                                <i class="fas fa-gamepad"></i>
+                                <div class="live-badge">LIVE</div>
+                            </div>
+                            <div class="live-info">
+                                <div class="live-user">
+                                    <img src="https://i.pravatar.cc/150?img=8" alt="User" class="live-avatar">
+                                    <div class="live-username">GlowMaster</div>
+                                </div>
+                                <div class="live-title">Neon Gaming Night</div>
+                                <div class="live-stats">
+                                    <div class="live-viewers">
+                                        <i class="fas fa-eye"></i>
+                                        <span>189 viewers</span>
+                                    </div>
+                                    <div class="live-category">Gaming</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="live-card" data-stream="neonvibes">
+                            <div class="live-thumbnail">
+                                <i class="fas fa-music"></i>
+                                <div class="live-badge">LIVE</div>
+                            </div>
+                            <div class="live-info">
+                                <div class="live-user">
+                                    <img src="https://i.pravatar.cc/150?img=12" alt="User" class="live-avatar">
+                                    <div class="live-username">NeonVibes</div>
+                                </div>
+                                <div class="live-title">Synthwave Mix Live</div>
+                                <div class="live-stats">
+                                    <div class="live-viewers">
+                                        <i class="fas fa-eye"></i>
+                                        <span>245 viewers</span>
+                                    </div>
+                                    <div class="live-category">Music</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Streamer -->
+                <div class="featured-streamer">
+                    <img src="https://i.pravatar.cc/150?img=32" alt="Streamer" class="streamer-pic">
+                    <div class="streamer-info">
+                        <h2>Jannu Star</h2>
+                        <p>Professional Gamer & Streamer</p>
+                        <div class="streamer-stats">
+                            <div class="stat">
+                                <div class="stat-value followers">12.5K</div>
+                                <div class="stat-label">FOLLOWERS</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value viewers">1.2K</div>
+                                <div class="stat-label">VIEWERS</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-value rating">4.9</div>
+                                <div class="stat-label">RATING</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Section -->
+                <div class="categories-section">
+                    <div class="section-title">CATEGORIES</div>
+                    <div class="categories-container">
+                        <div class="category-card" data-category="gaming">
+                            <div class="category-icon"><i class="fas fa-gamepad"></i></div>
+                            <div class="category-label">Gaming</div>
+                        </div>
+                        <div class="category-card" data-category="music">
+                            <div class="category-icon"><i class="fas fa-music"></i></div>
+                            <div class="category-label">Music</div>
+                        </div>
+                        <div class="category-card" data-category="art">
+                            <div class="category-icon"><i class="fas fa-paint-brush"></i></div>
+                            <div class="category-label">Art</div>
+                        </div>
+                        <div class="category-card" data-category="cooking">
+                            <div class="category-icon"><i class="fas fa-utensils"></i></div>
+                            <div class="category-label">Cooking</div>
+                        </div>
+                        <div class="category-card" data-category="irl">
+                            <div class="category-icon"><i class="fas fa-heart"></i></div>
+                            <div class="category-label">IRL</div>
+                        </div>
+                        <div class="category-card" data-category="tech">
+                            <div class="category-icon"><i class="fas fa-code"></i></div>
+                            <div class="category-label">Tech</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Streamers Section -->
+                <div class="streamers-section">
+                    <div class="section-title">RECOMMENDED STREAMERS</div>
+                    <div class="streamer-card" data-stream="cybertech">
+                        <img src="https://i.pravatar.cc/150?img=5" alt="Streamer" class="streamer-avatar">
+                        <div class="streamer-details">
+                            <div class="streamer-name">CyberTech</div>
+                            <div class="streamer-game">Programming Live Session</div>
+                            <div class="streamer-status">
+                                <span class="status-online">● LIVE</span>
+                                <span class="viewer-count"><i class="fas fa-eye"></i> 356</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="streamer-card" data-stream="artqueen">
+                        <img src="https://i.pravatar.cc/150?img=11" alt="Streamer" class="streamer-avatar">
+                        <div class="streamer-details">
+                            <div class="streamer-name">ArtQueen</div>
+                            <div class="streamer-game">Digital Painting</div>
+                            <div class="streamer-status">
+                                <span class="status-online">● LIVE</span>
+                                <span class="viewer-count"><i class="fas fa-eye"></i> 189</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Go Live Button -->
+            <div class="go-live-btn" id="go-live-btn">
+                <i class="fas fa-broadcast-tower"></i>
+            </div>
+
+            <!-- Navigation -->
+            <div class="nav-bar">
+                <div class="nav-item active" data-screen="home">
+                    <i class="fas fa-home nav-icon"></i>
+                    <div class="nav-label">Home</div>
+                </div>
+                <div class="nav-item" data-screen="discover">
+                    <i class="fas fa-compass nav-icon"></i>
+                    <div class="nav-label">Discover</div>
+                </div>
+                <div class="nav-item" data-screen="live">
+                    <i class="fas fa-broadcast-tower nav-icon"></i>
+                    <div class="nav-label">Live</div>
+                </div>
+                <div class="nav-item" data-screen="profile">
+                    <i class="fas fa-user nav-icon"></i>
+                    <div class="nav-label">Profile</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stream Screen -->
+        <div class="app-screen" id="stream-screen">
+            <div class="app-header">
+                <h1 class="app-title" id="stream-title">STREAM</h1>
+                <div class="header-icons">
+                    <div class="icon-btn" id="back-button"><i class="fas fa-arrow-left"></i></div>
+                    <div class="icon-btn"><i class="fas fa-share"></i></div>
+                </div>
+            </div>
+
+            <div class="stream-container">
+                <div class="stream-video">
+                    <div class="video-placeholder">
+                        <i class="fas fa-broadcast-tower"></i>
+                        <h3 id="streamer-name">Streamer Name</h3>
+                        <p>Live Stream</p>
+                    </div>
+                </div>
+                
+                <div class="stream-controls">
+                    <div class="control-btn">
+                        <i class="fas fa-heart control-icon"></i>
+                        <div class="control-label">Like</div>
+                    </div>
+                    <div class="control-btn">
+                        <i class="fas fa-comment control-icon"></i>
+                        <div class="control-label">Chat</div>
+                    </div>
+                    <div class="control-btn">
+                        <i class="fas fa-gift control-icon"></i>
+                        <div class="control-label">Gift</div>
+                    </div>
+                    <div class="control-btn">
+                        <i class="fas fa-share control-icon"></i>
+                        <div class="control-label">Share</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
