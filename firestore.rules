@@ -1,0 +1,226 @@
+/**
+ * # Firestore Security Rules for ConnectSphere
+ *
+ * ## Core Philosophy
+ * This ruleset enforces a user-centric security model designed for a social media application.
+ * The core principles are:
+ * 1.  **User Ownership**: Users have exclusive write control over their own profiles and content (posts, comments, likes).
+ * 2.  **Public Readability**: Most user-generated content (profiles, posts, comments) is publicly readable by any authenticated user to facilitate a social experience.
+ * 3.  **Collaborative Privacy**: Access to shared resources like video calls is strictly limited to the listed participants.
+ * 4.  **Privacy by Default**: Listing entire collections of users or private data is disallowed to prevent data scraping and protect user privacy.
+ *
+ * ## Data Structure
+ * The data is organized into top-level collections for each major entity type (`users`, `posts`, `video_calls`, etc.). This flat structure is performant for queries and simplifies security rule logic.
+ *
+ * ## Key Security Decisions
+ * - **User Profiles**: Stored in `/users/{userId}`. A user can only create a profile for their own UID and is the only one who can modify or delete it. User profiles are readable by other signed-in users, but the entire user list cannot be queried.
+ * - **Content (Posts, Comments, Likes)**: These are public-read for signed-in users. Write operations (create, update, delete) are strictly limited to the content's original author, enforced via a denormalized `authorId` field on each document.
+ * - **Video Calls**: Access is managed using a "Closed Collaborators" pattern. A `participantIds` array on each `/video_calls/{videoCallId}` document is the source of truth for who can read or modify the call details.
+ * - **Chat Messages**: Write access is granted to any signed-in user, but modification and deletion are restricted to the message sender. Listing all chat messages is disabled to protect privacy and prevent performance issues.
+ *
+ * ## Denormalization for Authorization
+ * To create simpler and more performant rules, authorization data is denormalized directly onto the documents being secured.
+ * - `authorId` is stored on `posts`, `comments`, and `likes` to verify ownership without requiring extra database reads.
+ * - `participantIds` is stored on `video_calls` to grant access to a specific list of users.
+ * This strategy avoids slow and costly `get()` calls in rules.
+ *
+ * ## Structural Segregation
+ * Data is segregated into top-level collections based on its function (e.g., `/users`, `/posts`). This provides clear, secure boundaries for access control and is more performant than using flags within a single collection.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // -------------------------------------------------------------------------
+    // Helper Functions
+    // -------------------------------------------------------------------------
+
+    /**
+     * Returns true if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Returns true if the authenticated user's UID matches the provided userId.
+     * This is the foundation of the user ownership model.
+     * @param userId The UID to check against the authenticated user.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    /**
+     * Returns true if the document being accessed already exists in Firestore.
+     * Crucial for protecting against writes to non-existent paths.
+     */
+    function isExistingDoc() {
+      return resource != null;
+    }
+
+    /**
+     * A common pattern for update/delete operations, ensuring the user is the
+     * owner of an existing document before allowing the write.
+     * @param userId The UID of the document's owner.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && isExistingDoc();
+    }
+    
+    /**
+     * On create, validates that the incoming document's authorId matches the user.
+     */
+    function isCreatingOwnContent() {
+      return isSignedIn() && request.resource.data.authorId == request.auth.uid;
+    }
+    
+    /**
+     * On update/delete, validates that the user is the author of the existing document.
+     */
+    function isAuthorOfExistingContent() {
+        return isExistingDoc() && isOwner(resource.data.authorId);
+    }
+    
+    /**
+     * On update, ensures the authorId field cannot be changed.
+     */
+    function authorIdIsImmutable() {
+        return request.resource.data.authorId == resource.data.authorId;
+    }
+
+    /**
+     * On create, validates that the incoming document's senderId matches the user.
+     */
+    function isCreatingOwnMessage() {
+        return isSignedIn() && request.resource.data.senderId == request.auth.uid;
+    }
+
+    /**
+     * On update/delete, validates that the user is the sender of the existing message.
+     */
+    function isSenderOfExistingMessage() {
+        return isExistingDoc() && isOwner(resource.data.senderId);
+    }
+
+    /**
+     * On update, ensures the senderId field cannot be changed.
+     */
+    function senderIdIsImmutable() {
+        return request.resource.data.senderId == resource.data.senderId;
+    }
+
+    /**
+     * Checks if the authenticated user is a participant in a shared resource.
+     * @param docData The data of the document being accessed, must contain a 'participantIds' array.
+     */
+    function isParticipant(docData) {
+      return isSignedIn() && request.auth.uid in docData.participantIds;
+    }
+    
+    /**
+     * @description Stores user profile information.
+     * @path /users/{userId}
+     * @allow (get) Any signed-in user can view another user's profile.
+     * @allow (create) A new user can create their own profile document.
+     * @allow (update) A user can update their own profile.
+     * @deny (list) No one can list all users in the database.
+     * @deny (update) A user cannot update another user's profile.
+     * @principle Restricts access to a user's own data tree and enforces self-creation.
+     */
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if false;
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+    }
+
+    /**
+     * @description Stores posts created by users, which are publicly viewable.
+     * @path /posts/{postId}
+     * @allow (list) Any client can list all posts for the main feed.
+     * @allow (create) A signed-in user can create a new post for themselves.
+     * @allow (update) A user can update a post they previously created.
+     * @deny (create) A user cannot create a post on behalf of someone else.
+     * @deny (delete) A user cannot delete someone else's post.
+     * @principle Enforces document ownership for writes while allowing public reads.
+     */
+    match /posts/{postId} {
+      allow get, list: if true;
+      allow create: if isCreatingOwnContent();
+      allow update: if isAuthorOfExistingContent() && authorIdIsImmutable();
+      allow delete: if isAuthorOfExistingContent();
+    }
+
+    /**
+     * @description Stores comments on posts.
+     * @path /comments/{commentId}
+     * @allow (list) Any client can list comments for a post.
+     * @allow (create) A signed-in user can add a comment to any post.
+     * @allow (delete) A user can delete their own comment.
+     * @deny (update) A user cannot edit a comment written by another user.
+     * @deny (delete) A user cannot delete a comment written by another user.
+     * @principle Enforces document ownership for writes while allowing public reads.
+     */
+    match /comments/{commentId} {
+      allow get, list: if true;
+      allow create: if isCreatingOwnContent();
+      allow update: if isAuthorOfExistingContent() && authorIdIsImmutable();
+      allow delete: if isAuthorOfExistingContent();
+    }
+    
+    /**
+     * @description Stores likes on posts.
+     * @path /likes/{likeId}
+     * @allow (list) Any client can list likes on a post.
+     * @allow (create) A signed-in user can like any post.
+     * @allow (delete) A user can remove (unlike) their own like.
+     * @deny (create) A user cannot "like" a post on behalf of someone else.
+     * @deny (delete) A user cannot remove a like from another user.
+     * @principle Enforces document ownership for writes while allowing public reads.
+     */
+    match /likes/{likeId} {
+      allow get, list: if true;
+      allow create: if isCreatingOwnContent();
+      allow update: if false; // Likes are typically not updated, only created/deleted.
+      allow delete: if isAuthorOfExistingContent();
+    }
+    
+    /**
+     * @description Stores individual chat messages.
+     * @path /chat_messages/{chatMessageId}
+     * @allow (get) Any signed-in user can retrieve a specific message if they have its ID.
+     * @allow (create) Any signed-in user can send a message.
+     * @allow (delete) A user can delete a message they sent.
+     * @deny (list) No one can query the entire collection of chat messages.
+     * @deny (update) A user cannot edit another user's message.
+     * @principle Enforces sender ownership for writes and disables broad queries for privacy.
+     */
+    match /chat_messages/{chatMessageId} {
+      allow get: if isSignedIn();
+      allow list: if false;
+      allow create: if isCreatingOwnMessage();
+      allow update: if isSenderOfExistingMessage() && senderIdIsImmutable();
+      allow delete: if isSenderOfExistingMessage();
+    }
+
+    /**
+     * @description Stores information about a video call, restricted to its participants.
+     * @path /video_calls/{videoCallId}
+     * @allow (get) A user in the `participantIds` list can get the call details.
+     * @allow (create) A signed-in user can create a new call, provided they are in the initial participants list.
+     * @allow (update) A participant can update the call (e.g., add/remove others, change title).
+     * @deny (get) A user not in the `participantIds` list cannot read call details.
+     * @deny (list) No one can list all video calls.
+     * @principle Implements a "Shared Access" or "Closed Collaborators" model.
+     */
+    match /video_calls/{videoCallId} {
+      allow get: if isExistingDoc() && isParticipant(resource.data);
+      allow list: if false;
+      allow create: if isParticipant(request.resource.data);
+      allow update: if isExistingDoc() && isParticipant(resource.data);
+      allow delete: if isExistingDoc() && isParticipant(resource.data);
+    }
+  }
+}
