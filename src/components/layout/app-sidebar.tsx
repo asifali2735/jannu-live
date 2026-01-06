@@ -10,7 +10,6 @@ import {
   Users,
   Video,
   Wallet,
-  Heart,
   LogOut,
   Sun,
   Moon,
@@ -33,10 +32,11 @@ import { Button } from '@/components/ui/button';
 import { currentUser } from '@/lib/placeholder-data';
 import { useTheme } from 'next-themes';
 import React from 'react';
+import { HeartBeatIcon } from '../icons/heart-beat-icon';
 
 const JannuLiveLogo = () => (
     <div className="flex items-center gap-2 p-2">
-        <Heart
+        <HeartBeatIcon
             className="text-primary w-8 h-8"
             style={{
                 filter: 'drop-shadow(0 0 8px hsl(var(--primary)))',

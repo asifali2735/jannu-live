@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, Bell, Sun, Moon, Heart } from 'lucide-react';
+import { Search, Bell, Sun, Moon } from 'lucide-react';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -15,10 +15,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { currentUser } from '@/lib/placeholder-data';
 import Link from 'next/link';
+import { HeartBeatIcon } from '../icons/heart-beat-icon';
 
 const JannuLiveLogo = () => (
     <div className="flex items-center gap-2">
-        <Heart
+        <HeartBeatIcon
             className="h-8 w-8 text-primary"
             style={{
                 filter: 'drop-shadow(0 0 8px hsl(var(--primary)))',
