@@ -1,5 +1,6 @@
-# Firebase Studio
+# Jannu-Live
+Live web app
 
-This is a NextJS starter in Firebase Studio.
+This is a Next.js project deployed from Firebase Studio.
 
-To get started, take a look at src/app/page.tsx.
+To get started, check src/app/page.tsx
