@@ -72,6 +72,18 @@
           "type": "string",
           "description": "Reference to the UserProfile who created the post. (Relationship: UserProfile 1:N Post)"
         },
+        "authorName": {
+          "type": "string",
+          "description": "The display name of the post's author."
+        },
+        "authorAvatarUrl": {
+          "type": "string",
+          "description": "The URL of the author's avatar."
+        },
+        "content": {
+            "type": "string",
+            "description": "The text content of the post."
+        },
         "mediaUrl": {
           "type": "string",
           "description": "URL of the video or picture content.",
@@ -81,35 +93,29 @@
           "type": "string",
           "description": "Type of media (e.g., 'video', 'image')."
         },
-        "description": {
-          "type": "string",
-          "description": "Description of the post."
+        "mediaHint": {
+            "type": "string"
+        },
+        "mediaDescription": {
+            "type": "string"
         },
         "createdAt": {
           "type": "string",
           "description": "Timestamp indicating when the post was created.",
           "format": "date-time"
         },
-        "likeIds": {
-          "type": "array",
-          "description": "References to Likes associated with the post. (Relationship: Post 1:N Like)",
-          "items": {
-            "type": "string"
-          }
+        "likes": {
+            "type": "number"
         },
-        "commentIds": {
-          "type": "array",
-          "description": "References to Comments associated with the post. (Relationship: Post 1:N Comment)",
-          "items": {
-            "type": "string"
-          }
+        "comments": {
+            "type": "number"
         }
       },
       "required": [
         "id",
         "authorId",
-        "mediaUrl",
-        "mediaType",
+        "authorName",
+        "content",
         "createdAt"
       ]
     },

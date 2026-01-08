@@ -48,48 +48,8 @@ export type Post = {
   timestamp: string;
 };
 
-export const posts: Post[] = [
-  {
-    id: 'post-1',
-    author: users[0],
-    content: 'Just reached the summit! The view is absolutely breathtaking. #hiking #mountains',
-    image: getImage('post-image-1'),
-    likes: 128,
-    secretLikes: 12,
-    comments: 23,
-    timestamp: '2h ago',
-  },
-  {
-    id: 'post-2',
-    author: users[1],
-    content: 'Exploring the city lights. There is a special magic to urban nights. #citylife #nightphotography',
-    image: getImage('post-image-2'),
-    likes: 256,
-    secretLikes: 3,
-    comments: 45,
-    timestamp: '5h ago',
-  },
-  {
-    id: 'post-3',
-    author: users[2],
-    content: 'Short video from my latest trip!',
-    video: getImage('post-video-1'),
-    likes: 512,
-    secretLikes: 45,
-    comments: 102,
-    timestamp: '1d ago',
-  },
-  {
-    id: 'post-4',
-    author: users[3],
-    content: 'Tried out a new recipe today, and it was delicious! Who wants the recipe? #foodie #homecooking',
-    image: getImage('post-image-3'),
-    likes: 98,
-    secretLikes: 1,
-    comments: 18,
-    timestamp: '2d ago',
-  },
-];
+export const posts: Post[] = [];
+
 
 export type Message = {
   id: string;
