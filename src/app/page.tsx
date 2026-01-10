@@ -1,47 +1,45 @@
-'use client';
 
-import React from 'react';
-import { collection, query, orderBy } from 'firebase/firestore';
-import { useCollection, useFirestore, useUser, useMemoFirebase } from '@/firebase';
-import { MainLayout } from '@/components/layout/main-layout';
-import CreatePost from '@/components/features/post/create-post';
-import PostCard from '@/components/features/post/post-card';
-import AdBanner from '@/components/features/ads/ad-banner';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { Skeleton } from '@/components/ui/skeleton';
+"use client";
+import { useState } from "react";
 
-export default function HomePage() {
-  const adBannerImage = PlaceHolderImages.find(img => img.id === 'ad-banner-1');
-  const firestore = useFirestore();
-  const { user } = useUser();
+export default function Home() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [msg, setMsg] = useState("");
 
-  const postsQuery = useMemoFirebase(
-    () => (firestore ? query(collection(firestore, 'posts'), orderBy('createdAt', 'desc')) : null),
-    [firestore]
-  );
-  const { data: posts, isLoading } = useCollection(postsQuery);
+  async function handleSignup() {
+    const res = await fetch("/api/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+    setMsg(data.message || data.error);
+  }
 
   return (
-    <MainLayout>
-      <div className="max-w-2xl mx-auto w-full space-y-6">
-        <h1 className="text-3xl font-bold font-headline">Home Feed</h1>
-        {user && <CreatePost />}
-        <div className="space-y-4">
-          {isLoading && (
-            <>
-              <Skeleton className="h-48 w-full" />
-              <Skeleton className="h-48 w-full" />
-              <Skeleton className="h-48 w-full" />
-            </>
-          )}
-          {posts?.map((post, index) => (
-            <React.Fragment key={post.id}>
-              <PostCard post={post} />
-              {index === 1 && adBannerImage && <AdBanner adImage={adBannerImage} />}
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
-    </MainLayout>
+    <div style={{ padding: 20 }}>
+      <h1>Jannu-Live</h1>
+
+      <input
+        placeholder="Email"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      <br /><br />
+
+      <input
+        type="password"
+        placeholder="Password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <br /><br />
+
+      <button onClick={handleSignup}>Sign Up</button>
+
+      <p>{msg}</p>
+    </div>
   );
 }
