@@ -1,8 +1,19 @@
-import { NextResponse } from 'next/server';
 
-export async function POST(request: Request) {
-  // TODO: Handle signup logic here
-  const body = await request.json();
-  console.log(body);
-  return NextResponse.json({ success: true, message: 'Signup endpoint reached' });
+import { NextResponse } from "next/server";
+
+export async function POST(req: Request) {
+  const body = await req.json();
+  const { email, password } = body;
+
+  if (!email || !password) {
+    return NextResponse.json(
+      { error: "Email and password required" },
+      { status: 400 }
+    );
+  }
+
+  return NextResponse.json({
+    message: "Signup successful",
+    user: { email },
+  });
 }
